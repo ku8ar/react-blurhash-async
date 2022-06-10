@@ -4,7 +4,8 @@ import { decode } from 'blurhash';
 let ctx;
 let pixels;
 let imageData;
-let canvas;
+
+const weakCanvasStore = {}
 
 self.onmessage = async ({ data }) => {
     let {
@@ -14,11 +15,18 @@ self.onmessage = async ({ data }) => {
         xCount,
         yCount,
         punch = 1,
+        id
     } = data;
 
+    // console.time('offscreen canvas')
+
     if (data.canvas) {
-        canvas = data.canvas
+        // canvas = data.canvas
+        weakCanvasStore[id] = new WeakRef(data.canvas)
     }
+
+    const canvas = weakCanvasStore[id].deref()
+
 
     canvas.width = width || canvas.width;
     canvas.height = height || canvas.height;
@@ -35,4 +43,6 @@ self.onmessage = async ({ data }) => {
     // ctx.imageSmoothingQuality = 'high'
     // ctx.filter = `blur(10px)`
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+
+    // console.timeEnd('offscreen canvas')
 }

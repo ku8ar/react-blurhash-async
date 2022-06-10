@@ -1,4 +1,5 @@
-import React, { FC, useLayoutEffect, useEffect, useRef } from 'react';
+// @ts-ignore
+import React, { FC, useEffect, useRef, useId } from 'react';
 import { decode } from 'blurhash';
 
 export type Props = React.CanvasHTMLAttributes<HTMLCanvasElement> & {
@@ -16,21 +17,20 @@ const BlurhashCanvas: FC<Props> = ({ async, hash, width = 128, height = 128, pun
   const ref = useRef()
   const offCanvasRef = useRef()
   const isTransferedCanvasRef = useRef()
-
-  useEffect(() => {
-    const canvas: HTMLCanvasElement = ref.current;
-    if (canvas) {
-      // @ts-ignore
-      offCanvasRef.current = canvas.transferControlToOffscreen()
-    }
-  }, [])
+  const id = useId()
 
   useEffect(() => {
     const canvas = ref.current;
-    const offCanvas = offCanvasRef.current
     const isTransfered = isTransferedCanvasRef.current
 
-    const msg = { width, height, xCount: width, yCount: height, punch, hash }
+    if (!isTransfered) {
+      // @ts-ignore
+      offCanvasRef.current = canvas.transferControlToOffscreen()
+    }
+
+    const offCanvas = offCanvasRef.current
+
+    const msg = { width, height, xCount: width, yCount: height, punch, hash, id }
 
     if (isTransfered) {
       worker.postMessage(msg)
@@ -42,7 +42,7 @@ const BlurhashCanvas: FC<Props> = ({ async, hash, width = 128, height = 128, pun
 
   }, [hash, width, height, punch])
 
-  return <canvas {...props} height={height} width={width} ref={ref} />
+  return <canvas {...props} height={height} width={width} id={'gtes'} ref={ref} />
 }
 
 const BlurhashCanvas2: FC<Props> = ({ async, hash, width = 128, height = 128, punch, ...props }) => {
@@ -53,11 +53,15 @@ const BlurhashCanvas2: FC<Props> = ({ async, hash, width = 128, height = 128, pu
       const canvas: HTMLCanvasElement = ref.current;
 
       if (canvas) {
+        // console.time('draw canvas')
+
         const pixels = decode(hash, width, height, punch);
         const ctx = canvas.getContext('2d');
         const imageData = ctx.createImageData(width, height);
         imageData.data.set(pixels);
         ctx.putImageData(imageData, 0, 0);
+
+        // console.timeEnd('draw canvas')
       }
     }
 

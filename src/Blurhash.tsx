@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { FC, CSSProperties } from 'react';
 
 import BlurhashCanvas from './BlurhashCanvas';
 
@@ -12,6 +12,7 @@ type Props = React.HTMLAttributes<HTMLDivElement> & {
   style?: React.CSSProperties;
   /** CSS width, default: 128 */
   width?: number | string | 'auto';
+  async?: boolean;
 };
 
 const canvasStyle: React.CSSProperties = {
@@ -24,40 +25,36 @@ const canvasStyle: React.CSSProperties = {
   height: '100%',
 };
 
-export default class Blurhash extends React.PureComponent<Props> {
-  static defaultProps = {
-    height: 128,
-    width: 128,
-    resolutionX: 32,
-    resolutionY: 32,
-  };
+const defaultStyle: CSSProperties = { display: 'inline-block', position: 'relative' }
 
-  componentDidUpdate() {
-    if (this.props.resolutionX <= 0) {
-      throw new Error('resolutionX must be larger than zero');
-    }
+const Blurhash: FC<Props> = ({ async, hash, height = 128, width = 128, punch, resolutionX = 32, resolutionY = 32, style, ...props }) => {
+  const finalStyle = style ? { ...defaultStyle, ...style } : defaultStyle;
 
-    if (this.props.resolutionY <= 0) {
-      throw new Error('resolutionY must be larger than zero');
-    }
+  if (resolutionX <= 0) {
+    console.error('resolutionX must be larger than zero')
+    return null
   }
 
-  render() {
-    const { hash, height, width, punch, resolutionX, resolutionY, style, ...rest } = this.props;
-
-    return (
-      <div
-        {...rest}
-        style={{ display: 'inline-block', height, width, ...style, position: 'relative' }}
-      >
-        <BlurhashCanvas
-          hash={hash}
-          height={resolutionY}
-          width={resolutionX}
-          punch={punch}
-          style={canvasStyle}
-        />
-      </div>
-    );
+  if (resolutionY <= 0) {
+    console.error('resolutionY must be larger than zero')
+    return null
   }
+
+  return (
+    <div
+      {...props}
+      style={finalStyle}
+    >
+      <BlurhashCanvas
+        async={async}
+        hash={hash}
+        height={resolutionY}
+        width={resolutionX}
+        punch={punch}
+        style={canvasStyle}
+      />
+    </div>
+  )
 }
+
+export default Blurhash

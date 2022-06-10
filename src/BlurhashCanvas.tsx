@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { FC, useEffect, useRef } from 'react';
 import { decode } from 'blurhash';
 
 export type Props = React.CanvasHTMLAttributes<HTMLCanvasElement> & {
@@ -6,41 +6,36 @@ export type Props = React.CanvasHTMLAttributes<HTMLCanvasElement> & {
   height?: number;
   punch?: number;
   width?: number;
+  async?: boolean
 };
 
-export default class BlurhashCanvas extends React.PureComponent<Props> {
-  static defaultProps = {
-    height: 128,
-    width: 128,
-  };
+const BlurhashCanvas: FC<Props> = ({ async, hash, width = 128, height = 128, punch, ...props }) => {
+  const ref = useRef()
 
-  canvas: HTMLCanvasElement = null;
+  useEffect(() => {
+    const draw = () => {
+      const canvas: HTMLCanvasElement = ref.current;
 
-  componentDidUpdate() {
-    this.draw();
-  }
-
-  handleRef = (canvas: HTMLCanvasElement) => {
-    this.canvas = canvas;
-    this.draw();
-  };
-
-  draw = () => {
-    const { hash, height, punch, width } = this.props;
-
-    if (this.canvas) {
-      const pixels = decode(hash, width, height, punch);
-
-      const ctx = this.canvas.getContext('2d');
-      const imageData = ctx.createImageData(width, height);
-      imageData.data.set(pixels);
-      ctx.putImageData(imageData, 0, 0);
+      if (canvas) {
+        const pixels = decode(hash, width, height, punch);
+        const ctx = canvas.getContext('2d');
+        const imageData = ctx.createImageData(width, height);
+        imageData.data.set(pixels);
+        ctx.putImageData(imageData, 0, 0);
+      }
     }
-  };
 
-  render() {
-    const { hash, height, width, ...rest } = this.props;
+    if (async) {
+      const timeout = setTimeout(draw, 0)
 
-    return <canvas {...rest} height={height} width={width} ref={this.handleRef} />;
-  }
+      return () => clearTimeout(timeout)
+    } else {
+      draw()
+    }
+
+  }, [hash, width, height, punch])
+
+  return <canvas {...props} height={height} width={width} ref={ref} />
 }
+
+export default BlurhashCanvas

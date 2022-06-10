@@ -8,6 +8,7 @@ import RadioInput from './RadioInput';
 import RangeInput from './RangeInput';
 import Setting from './Setting';
 import BlurhashImageEncoder from './BlurhashImageEncoder';
+import Stress from './Stress'
 
 const Root = styled.div`
   margin: 0 auto;
@@ -227,7 +228,7 @@ const BlurhashCanvasDemo = ({ hash }: { hash: string }) => {
 };
 
 const Demo = () => {
-  const [mode, setMode] = useState<'hash' | 'image'>('hash');
+  const [mode, setMode] = useState<'hash' | 'image' | 'stress' | 'stress_async'>('hash');
   const [hashInput, setHashInput] = useState('LEHV6nWB2yk8pyo0adR*.7kCMdnj');
   const [encodedHash, setEncodedHash] = useState('');
   const hash = mode === 'hash' ? hashInput : encodedHash;
@@ -248,11 +249,19 @@ const Demo = () => {
           }}
         />
         <StyledRadioInput
-          label="Encode image"
+          label="Stress test (sync)"
           input={{
             onChange: e => setMode(e.target.value as 'image'),
-            value: 'image',
-            checked: mode === 'image',
+            value: 'stress',
+            checked: mode === 'stress',
+          }}
+        />
+        <StyledRadioInput
+          label="Stress test (async)"
+          input={{
+            onChange: e => setMode(e.target.value as 'image'),
+            value: 'stress_async',
+            checked: mode === 'stress_async',
           }}
         />
       </ModeSelect>
@@ -266,6 +275,14 @@ const Demo = () => {
           <Hint>Note: encoding is done in the browser only (no server involved)!</Hint>
           <BlurhashImageEncoder onChange={hash => setEncodedHash(hash)} value={encodedHash} />
         </>
+      )}
+
+      {mode === 'stress' && (
+        <Stress />
+      )}
+
+      {mode === 'stress_async' && (
+        <Stress async />
       )}
 
       {hash && !blurhashValid.result && (

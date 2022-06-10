@@ -14,7 +14,7 @@ self.onmessage = async ({ data }) => {
         height,
         xCount,
         yCount,
-        punch = 1,
+        punch,
         id
     } = data;
 
@@ -26,6 +26,8 @@ self.onmessage = async ({ data }) => {
     }
 
     const canvas = weakCanvasStore[id].deref()
+
+    if (!canvas) return;
 
 
     canvas.width = width || canvas.width;

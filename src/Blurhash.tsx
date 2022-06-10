@@ -28,8 +28,6 @@ const canvasStyle: React.CSSProperties = {
 const defaultStyle: CSSProperties = { display: 'inline-block', position: 'relative' }
 
 const Blurhash: FC<Props> = ({ async, hash, height = 128, width = 128, punch, resolutionX = 32, resolutionY = 32, style, ...props }) => {
-  const finalStyle = style ? { ...defaultStyle, ...style } : defaultStyle;
-
   if (resolutionX <= 0) {
     console.error('resolutionX must be larger than zero')
     return null
@@ -43,7 +41,7 @@ const Blurhash: FC<Props> = ({ async, hash, height = 128, width = 128, punch, re
   return (
     <div
       {...props}
-      style={finalStyle}
+      style={{ ...defaultStyle, width, height, ...style }}
     >
       <BlurhashCanvas
         async={async}

@@ -195,6 +195,7 @@ const BlurhashDemo = ({ hash }: { hash: string }) => {
 const BlurhashCanvasDemo = ({ hash }: { hash: string }) => {
   const [size, setSize] = useState(256);
   const [punch, setPunch] = useState(1);
+  const [isAsync, setAsync] = useState(false)
 
   return (
     <div>
@@ -218,10 +219,29 @@ const BlurhashCanvasDemo = ({ hash }: { hash: string }) => {
             onChange={e => setPunch(Number(e.target.value))}
           />
         </Setting>
+
+        <ModeSelect>
+        <StyledRadioInput
+          label="async (false)"
+          input={{
+            onChange: e => setAsync(false),
+            value: 'true',
+            checked: !isAsync,
+          }}
+        />
+        <StyledRadioInput
+          label="async (true)"
+          input={{
+            onChange: e => setAsync(true),
+            value: 'stress',
+            checked: isAsync,
+          }}
+        />
+      </ModeSelect>
       </SettingsContainer>
 
       <BlurhashContainer>
-        <BlurhashCanvas hash={hash} height={size} width={size} punch={punch} />
+        <BlurhashCanvas async={isAsync} hash={hash} height={size} width={size} punch={punch} />
       </BlurhashContainer>
     </div>
   );

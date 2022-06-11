@@ -1,5 +1,6 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+// @ts-ignore
+import { createRoot } from 'react-dom/client';
 import Demo from './Demo';
 
 const rootElement = document.createElement('div');
@@ -8,4 +9,5 @@ if (!document.querySelector('div')) {
   document.body.appendChild(rootElement);
 }
 
-ReactDOM.render(<Demo />, rootElement);
+const root = createRoot(rootElement)
+root.render(<Demo />)

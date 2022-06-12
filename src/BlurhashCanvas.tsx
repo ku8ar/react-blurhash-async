@@ -44,7 +44,7 @@ const BlurhashCanvasWorker: FC<Props> = ({ loading = 'lazy', hash, width = 128, 
 
   }, [hash, width, height, punch])
 
-  return <canvas {...props} height={height} width={width} id={'gtes'} ref={ref} />
+  return <canvas {...props} height={height} width={width} ref={ref} />
 }
 
 const BlurhashCanvasFallback: FC<Props> = ({ loading, hash, width = 128, height = 128, punch, ...props }) => {

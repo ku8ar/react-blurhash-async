@@ -7,7 +7,7 @@
 >
 > Fork of react-blurhash library with added lazy loading (not blocking JS thread)
 
-[Demo](https://woltapp.github.io/react-blurhash/)
+[Demo](https://ku8ar.github.io/react-blurhash-async/)
 
 ## Install
 

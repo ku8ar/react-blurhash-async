@@ -1,7 +1,7 @@
 {
   "name": "react-blurhash-async",
-  "version": "0.0.6",
-  "description": "Blurhash implementation for React",
+  "version": "0.0.8",
+  "description": "Blurhash Web Worker implementation for React",
   "keywords": [
     "blurhash",
     "webworker",
@@ -25,7 +25,7 @@
     "prepublishOnly": "npm run build",
     "build": "npm run build:es && npm run build:lib",
     "build:demo": "rm -rf ./docs && webpack --mode production --config webpack.demo.config.js",
-    "build:es": "rm -rf ./es   && npm run ts -- --module esnext   --outDir ./es",
+    "build:es": "rm -rf ./es   && npm run ts -- --module es6   --outDir ./es",
     "build:lib": "rm -rf ./lib && npm run ts -- --module commonjs --outDir ./lib --esModuleInterop true",
     "demo": "webpack serve --config webpack.demo.config.js --hot --progress",
     "prettier": "prettier src/**/*.ts",

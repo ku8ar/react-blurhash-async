@@ -2,7 +2,7 @@
   "compilerOptions": {
     "module": "esnext",
     "moduleResolution": "nodenext",
-    "target": "esnext",
+    "target": "es2019",
     "lib": ["webworker", "es6", "dom"],
     "declaration": true,
     "outDir": "./lib",

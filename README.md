@@ -1,16 +1,18 @@
-# react-blurhash
+# react-blurhash-async
 
-[![NPM Version](https://img.shields.io/npm/v/react-blurhash.svg?style=flat)](https://www.npmjs.com/package/react-blurhash)
-[![NPM Downloads](https://img.shields.io/npm/dm/react-blurhash.svg?style=flat)](https://npmcharts.com/compare/react-blurhash?minimal=true)
+[![NPM Version](https://img.shields.io/npm/v/react-blurhash.svg?style=flat)](https://www.npmjs.com/package/react-blurhash-async)
+[![NPM Downloads](https://img.shields.io/npm/dm/react-blurhash.svg?style=flat)](https://npmcharts.com/compare/react-blurhash-async?minimal=true)
 
 > React components for using the [blurhash algorithm](https://blurha.sh) in your React projects
+>
+> Fork of react-blurhash library with added lazy loading (not blocking JS thread)
 
 [Demo](https://woltapp.github.io/react-blurhash/)
 
 ## Install
 
 ```sh
-npm install --save blurhash react-blurhash
+npm install --save blurhash react-blurhash-async
 ```
 
 ## Usage
@@ -18,7 +20,7 @@ npm install --save blurhash react-blurhash
 ### `<Blurhash />`
 
 ```js
-import { Blurhash } from "react-blurhash";
+import { Blurhash } from "react-blurhash-async";
 ```
 
 ### Description
@@ -36,6 +38,7 @@ It uses `BlurhashCanvas` and a wrapping `div` to scale the decoded image to your
 | `resolutionX` (int)      | The X-axis resolution in which the decoded image will be rendered at. Recommended min. 32px. Large sizes (>128px) will greatly decrease rendering performance. (Default: 32) |
 | `resolutionY` (int)      | The Y-axis resolution in which the decoded image will be rendered at. Recommended min. 32px. Large sizes (>128px) will greatly decrease rendering performance. (Default: 32) |
 | `punch` (int)            | Controls the "punch" value (~contrast) of the blurhash decoding algorithm. (Default: 1)                                                                                      |
+| `loading` ('eager' \| 'lazy')            | Controls how blurhash is rendered. "Eager" -> blocks the thread, and component will be rendered together with blurhash. "lazy" -> loads blurhash after render cycle. When browser supports Canvas OffScreen, blurhash is generated inside webworker. (Default: "lazy")                                                                                      |
 
 #### Example
 
@@ -68,6 +71,7 @@ import { BlurhashCanvas } from "react-blurhash";
 | `width` (int)   | Width of the decoded image.                                                             |
 | `height` (int)  | Height of the decoded image.                                                            |
 | `punch` (int)   | Controls the "punch" value (~contrast) of the blurhash decoding algorithm. (Default: 1) |
+| `loading` ('eager' \| 'lazy')            | Controls how blurhash is rendered. "Eager" -> blocks the thread, and component will be rendered together with blurhash. "lazy" -> loads blurhash after render cycle. When browser supports Canvas OffScreen, blurhash is generated inside webworker. (Default: "lazy")                                                                                      |
 
 #### Example
 
@@ -78,3 +82,5 @@ import { BlurhashCanvas } from "react-blurhash";
 ## Browser support
 
 Blurhash depends on `Uint8ClampedArray`, which is supported on all mainstream browsers and >=IE11.
+Full async rendering support is here: https://caniuse.com/offscreencanvas
+

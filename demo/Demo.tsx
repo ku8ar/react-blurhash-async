@@ -143,6 +143,7 @@ const BlurhashDemo = ({ hash }: { hash: string }) => {
   const [size, setSize] = useState(256);
   const [resolution, setResolution] = useState(32);
   const [punch, setPunch] = useState(1);
+  const [isAsync, setAsync] = useState(false)
 
   return (
     <div>
@@ -176,6 +177,27 @@ const BlurhashDemo = ({ hash }: { hash: string }) => {
             onChange={e => setPunch(Number(e.target.value))}
           />
         </Setting>
+
+        <ModeSelect>
+          <Setting label="loading" value={''}>
+            <StyledRadioInput
+              label="eager"
+              input={{
+                onChange: e => setAsync(false),
+                value: 'true',
+                checked: !isAsync,
+              }}
+            />
+            <StyledRadioInput
+              label="lazy"
+              input={{
+                onChange: e => setAsync(true),
+                value: 'stress',
+                checked: isAsync,
+              }}
+            />
+          </Setting>
+        </ModeSelect>
       </SettingsContainer>
 
       <BlurhashContainer>
@@ -186,6 +208,7 @@ const BlurhashDemo = ({ hash }: { hash: string }) => {
           punch={punch}
           resolutionX={resolution}
           resolutionY={resolution}
+          loading={isAsync ? 'lazy' : 'eager'}
         />
       </BlurhashContainer>
     </div>
@@ -220,24 +243,24 @@ const BlurhashCanvasDemo = ({ hash }: { hash: string }) => {
           />
         </Setting>
 
-        <ModeSelect>
-        <StyledRadioInput
-          label="async (false)"
-          input={{
-            onChange: e => setAsync(false),
-            value: 'true',
-            checked: !isAsync,
-          }}
-        />
-        <StyledRadioInput
-          label="async (true)"
-          input={{
-            onChange: e => setAsync(true),
-            value: 'stress',
-            checked: isAsync,
-          }}
-        />
-      </ModeSelect>
+        <Setting label="loading" value={''}>
+          <StyledRadioInput
+            label="async (false)"
+            input={{
+              onChange: e => setAsync(false),
+              value: 'true',
+              checked: !isAsync,
+            }}
+          />
+          <StyledRadioInput
+            label="async (true)"
+            input={{
+              onChange: e => setAsync(true),
+              value: 'stress',
+              checked: isAsync,
+            }}
+          />
+        </Setting>
       </SettingsContainer>
 
       <BlurhashContainer>
@@ -256,7 +279,7 @@ const Demo = () => {
 
   return (
     <Root>
-      <Heading1>react-blurhash demo</Heading1>
+      <Heading1>react-blurhash-async demo</Heading1>
       <Separator />
 
       <ModeSelect>
@@ -269,7 +292,7 @@ const Demo = () => {
           }}
         />
         <StyledRadioInput
-          label="Stress test (sync)"
+          label="Stress test (loading=eager)"
           input={{
             onChange: e => setMode(e.target.value as 'image'),
             value: 'stress',
@@ -277,7 +300,7 @@ const Demo = () => {
           }}
         />
         <StyledRadioInput
-          label="Stress test (async)"
+          label="Stress test (loading=lazy)"
           input={{
             onChange: e => setMode(e.target.value as 'image'),
             value: 'stress_async',

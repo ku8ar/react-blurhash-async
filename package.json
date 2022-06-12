@@ -4,6 +4,7 @@
   "description": "Blurhash implementation for React",
   "keywords": [
     "blurhash",
+    "webworker",
     "blur",
     "hash",
     "image",

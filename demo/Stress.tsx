@@ -13,7 +13,7 @@ const Stress: FC<{ async?: boolean }> = ({ async }) => <>
             key={i}
             hash={hash}
             punch={2}
-            async={async}
+            loading={async ? 'lazy' : 'eager'}
             width={32}
             height={32}
         />

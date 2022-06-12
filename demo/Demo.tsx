@@ -241,7 +241,7 @@ const BlurhashCanvasDemo = ({ hash }: { hash: string }) => {
       </SettingsContainer>
 
       <BlurhashContainer>
-        <BlurhashCanvas async={isAsync} hash={hash} height={size} width={size} punch={punch} />
+        <BlurhashCanvas loading={isAsync ? 'lazy' : 'eager'} hash={hash} height={size} width={size} punch={punch} />
       </BlurhashContainer>
     </div>
   );

@@ -7,13 +7,15 @@ export type Props = React.CanvasHTMLAttributes<HTMLCanvasElement> & {
   height?: number;
   punch?: number;
   width?: number;
-  async?: boolean
+  loading?: 'eager' | 'lazy'
 };
 
 // @ts-ignore
-const worker = new Worker(new URL('./BlurhashWorker.worker', import.meta.url));
+const worker = new Worker(new URL('./BlurhashWorker.worker', import.meta.url))
+// @ts-ignore
+const isOffscreenSupport = typeof OffscreenCanvas !== 'undefined'
 
-const BlurhashCanvas: FC<Props> = ({ async, hash, width = 128, height = 128, punch, ...props }) => {
+const BlurhashCanvasWorker: FC<Props> = ({ loading = 'lazy', hash, width = 128, height = 128, punch, ...props }) => {
   const ref = useRef()
   const offCanvasRef = useRef()
   const isTransferedCanvasRef = useRef()
@@ -45,7 +47,7 @@ const BlurhashCanvas: FC<Props> = ({ async, hash, width = 128, height = 128, pun
   return <canvas {...props} height={height} width={width} id={'gtes'} ref={ref} />
 }
 
-const BlurhashCanvas2: FC<Props> = ({ async, hash, width = 128, height = 128, punch, ...props }) => {
+const BlurhashCanvasFallback: FC<Props> = ({ loading, hash, width = 128, height = 128, punch, ...props }) => {
   const ref = useRef()
 
   useEffect(() => {
@@ -65,7 +67,7 @@ const BlurhashCanvas2: FC<Props> = ({ async, hash, width = 128, height = 128, pu
       }
     }
 
-    if (async) {
+    if (loading === 'lazy') {
       const timeout = setTimeout(draw, 0)
 
       return () => clearTimeout(timeout)
@@ -76,6 +78,13 @@ const BlurhashCanvas2: FC<Props> = ({ async, hash, width = 128, height = 128, pu
   }, [hash, width, height, punch])
 
   return <canvas {...props} height={height} width={width} ref={ref} />
+}
+
+const BlurhashCanvas: FC<Props> = ({ loading, ...props }) => {
+  const canUseWorker = isOffscreenSupport && loading === 'lazy'
+  const Component = canUseWorker ? BlurhashCanvasWorker : BlurhashCanvasFallback
+
+  return <Component loading={loading} {...props} />
 }
 
 export default BlurhashCanvas

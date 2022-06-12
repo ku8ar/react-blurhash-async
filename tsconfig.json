@@ -3,7 +3,7 @@
     "module": "esnext",
     "moduleResolution": "node",
     "target": "esnext",
-    "lib": ["es5", "dom"],
+    "lib": ["webworker", "es6", "dom"],
     "declaration": true,
     "outDir": "./lib",
     "sourceMap": true,

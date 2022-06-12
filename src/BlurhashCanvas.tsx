@@ -1,6 +1,7 @@
 // @ts-ignore
 import React, { FC, useEffect, useRef, useId } from 'react';
 import { decode } from 'blurhash';
+import worker from './worker'
 
 export type Props = React.CanvasHTMLAttributes<HTMLCanvasElement> & {
   hash: string;
@@ -10,11 +11,6 @@ export type Props = React.CanvasHTMLAttributes<HTMLCanvasElement> & {
   loading?: 'eager' | 'lazy'
 };
 
-let worker = null
-if (typeof window !== 'undefined') {
-  // @ts-ignore jebane gowno ts jest na poziomie cyfryzacji p0lski
-  worker = new Worker(new URL('./BlurhashWorker.worker', import.meta.url))
-}
 // @ts-ignore
 const isOffscreenSupport = typeof OffscreenCanvas !== 'undefined'
 

@@ -1,5 +1,5 @@
 // @ts-ignore
-import React, { FC, useEffect, useRef, useId } from 'react';
+import React, { FC, useEffect, useRef, useMemo } from 'react';
 import { decode } from 'blurhash';
 import worker from './worker'
 
@@ -14,11 +14,13 @@ export type Props = React.CanvasHTMLAttributes<HTMLCanvasElement> & {
 // @ts-ignore
 const isOffscreenSupport = typeof OffscreenCanvas !== 'undefined'
 
+let idGen = 0
+
 const BlurhashCanvasWorker: FC<Props> = ({ loading = 'lazy', hash, width = 128, height = 128, punch, ...props }) => {
   const ref = useRef()
   const offCanvasRef = useRef()
   const isTransferedCanvasRef = useRef()
-  const id = useId()
+  const id = useMemo(() => ++idGen, [])
 
   useEffect(() => {
     const canvas = ref.current;
@@ -79,7 +81,7 @@ const BlurhashCanvasFallback: FC<Props> = ({ loading, hash, width = 128, height 
   return <canvas {...props} height={height} width={width} ref={ref} />
 }
 
-const BlurhashCanvas: FC<Props> = ({ loading, ...props }) => {
+const BlurhashCanvas: FC<Props> = ({ loading = 'lazy', ...props }) => {
   const canUseWorker = isOffscreenSupport && !!worker && loading === 'lazy'
   const Component = canUseWorker ? BlurhashCanvasWorker : BlurhashCanvasFallback
 

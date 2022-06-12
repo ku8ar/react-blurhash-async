@@ -10,8 +10,11 @@ export type Props = React.CanvasHTMLAttributes<HTMLCanvasElement> & {
   loading?: 'eager' | 'lazy'
 };
 
-// @ts-ignore
-const worker = new Worker(new URL('./BlurhashWorker.worker', import.meta.url))
+let worker = null
+if (typeof window !== 'undefined') {
+  // @ts-ignore jebane gowno ts jest na poziomie cyfryzacji p0lski
+  worker = new Worker(new URL('./BlurhashWorker.worker', import.meta.url))
+}
 // @ts-ignore
 const isOffscreenSupport = typeof OffscreenCanvas !== 'undefined'
 
@@ -81,7 +84,7 @@ const BlurhashCanvasFallback: FC<Props> = ({ loading, hash, width = 128, height 
 }
 
 const BlurhashCanvas: FC<Props> = ({ loading, ...props }) => {
-  const canUseWorker = isOffscreenSupport && loading === 'lazy'
+  const canUseWorker = isOffscreenSupport && !!worker && loading === 'lazy'
   const Component = canUseWorker ? BlurhashCanvasWorker : BlurhashCanvasFallback
 
   return <Component loading={loading} {...props} />

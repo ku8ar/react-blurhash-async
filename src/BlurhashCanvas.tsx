@@ -9,6 +9,7 @@ export type Props = React.CanvasHTMLAttributes<HTMLCanvasElement> & {
   punch?: number;
   width?: number;
   loading?: 'eager' | 'lazy'
+  imageRef?: React.MutableRefObject<HTMLImageElement>;
 };
 
 // @ts-ignore
@@ -16,13 +17,16 @@ const isOffscreenSupport = typeof OffscreenCanvas !== 'undefined'
 
 let idGen = 0
 
-const BlurhashCanvasWorker: FC<Props> = ({ loading = 'lazy', hash, width = 128, height = 128, punch, ...props }) => {
+const BlurhashCanvasWorker: FC<Props> = ({ loading = 'lazy', hash, width = 128, height = 128, punch, imageRef, ...props }) => {
   const ref = useRef()
   const offCanvasRef = useRef()
   const isTransferedCanvasRef = useRef()
   const id = useMemo(() => ++idGen, [])
 
   useEffect(() => {
+    const imageComplete = imageRef?.current?.complete
+    if (imageComplete) return ;
+
     const canvas = ref.current;
     const isTransfered = isTransferedCanvasRef.current
 
@@ -48,10 +52,13 @@ const BlurhashCanvasWorker: FC<Props> = ({ loading = 'lazy', hash, width = 128, 
   return <canvas {...props} height={height} width={width} ref={ref} />
 }
 
-const BlurhashCanvasFallback: FC<Props> = ({ loading, hash, width = 128, height = 128, punch, ...props }) => {
+const BlurhashCanvasFallback: FC<Props> = ({ loading, hash, width = 128, height = 128, punch, imageRef, ...props }) => {
   const ref = useRef()
 
   useEffect(() => {
+    const imageComplete = imageRef?.current?.complete
+    if (imageComplete) return ;
+
     const draw = () => {
       const canvas: HTMLCanvasElement = ref.current;
 

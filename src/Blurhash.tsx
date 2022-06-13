@@ -13,6 +13,7 @@ type Props = React.HTMLAttributes<HTMLDivElement> & {
   /** CSS width, default: 128 */
   width?: number | string | 'auto';
   loading?: 'eager' | 'lazy';
+  imageRef?: React.MutableRefObject<HTMLImageElement | null>;
 };
 
 const canvasStyle: React.CSSProperties = {
@@ -27,7 +28,7 @@ const canvasStyle: React.CSSProperties = {
 
 const defaultStyle: CSSProperties = { display: 'inline-block', position: 'relative' }
 
-const Blurhash: FC<Props> = ({ loading, hash, height = 128, width = 128, punch, resolutionX = 32, resolutionY = 32, style, ...props }) => {
+const Blurhash: FC<Props> = ({ loading, hash, height = 128, width = 128, punch, resolutionX = 32, resolutionY = 32, style, imageRef, ...props }) => {
   if (resolutionX <= 0) {
     console.error('resolutionX must be larger than zero')
     return null
@@ -50,6 +51,7 @@ const Blurhash: FC<Props> = ({ loading, hash, height = 128, width = 128, punch, 
         width={resolutionX}
         punch={punch}
         style={canvasStyle}
+        imageRef={imageRef}
       />
     </div>
   )

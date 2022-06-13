@@ -9,6 +9,7 @@ import RangeInput from './RangeInput';
 import Setting from './Setting';
 import BlurhashImageEncoder from './BlurhashImageEncoder';
 import Stress from './Stress'
+import ImageRef from './ImageRef'
 
 const Root = styled.div`
   margin: 0 auto;
@@ -271,7 +272,7 @@ const BlurhashCanvasDemo = ({ hash }: { hash: string }) => {
 };
 
 const Demo = () => {
-  const [mode, setMode] = useState<'hash' | 'image' | 'stress' | 'stress_async'>('hash');
+  const [mode, setMode] = useState<'hash' | 'image' | 'stress' | 'stress_async' | 'imageRef'>('hash');
   const [hashInput, setHashInput] = useState('LEHV6nWB2yk8pyo0adR*.7kCMdnj');
   const [encodedHash, setEncodedHash] = useState('');
   const hash = mode === 'hash' ? hashInput : encodedHash;
@@ -307,6 +308,14 @@ const Demo = () => {
             checked: mode === 'stress_async',
           }}
         />
+        <StyledRadioInput
+          label="imageRef param"
+          input={{
+            onChange: e => setMode(e.target.value as 'imageRef'),
+            value: 'imageRef',
+            checked: mode === 'imageRef',
+          }}
+        />
       </ModeSelect>
 
       {mode === 'hash' && (
@@ -327,6 +336,11 @@ const Demo = () => {
       {mode === 'stress_async' && (
         <Stress async />
       )}
+
+      {mode === 'imageRef' && (
+        <ImageRef />
+      )}
+
 
       {hash && !blurhashValid.result && (
         <BlurhashError>

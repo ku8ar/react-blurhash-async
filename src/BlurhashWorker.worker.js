@@ -29,10 +29,6 @@ const linearTosRGB = (v) =>
 
 const signSqr = (x) => (x < 0 ? -1 : 1) * x * x;
 
-/**
- * Fast approximate cosine implementation
- * Based on FTrig https://github.com/netcell/FTrig
- */
 const fastCos = (x) => {
     x += PI / 2;
     while (x > PI) {
@@ -42,14 +38,6 @@ const fastCos = (x) => {
     return 0.225 * (signSqr(cos) - cos) + cos;
 };
 
-/**
- * Decodes BlurHash image
- * @param {string} blurHash BlurHash image string
- * @param {number} width Output image width
- * @param {number} height Output image height
- * @param {?number} punch
- * @returns {Uint8ClampedArray}
- */
 function decode(blurHash, width, height, punch) {
     const sizeFlag = decode83(blurHash, 0, 1);
     const numX = (sizeFlag % 9) + 1;
@@ -122,17 +110,7 @@ function decode(blurHash, width, height, punch) {
 const weakCanvasStore = {}
 
 self.onmessage = async ({ data }) => {
-    let {
-        hash,
-        width,
-        height,
-        xCount,
-        yCount,
-        punch,
-        id
-    } = data;
-
-    // console.time('offscreen canvas')
+    const { hash, width, height, punch, id } = data;
 
     if (data.canvas) {
         weakCanvasStore[id] = new WeakRef(data.canvas)
@@ -142,22 +120,16 @@ self.onmessage = async ({ data }) => {
 
     if (!canvas) return;
 
-
     canvas.width = width || canvas.width;
     canvas.height = height || canvas.height;
     const ctx = canvas.getContext('2d');
 
-    const pixels = decode(hash, xCount, yCount, punch);
+    const pixels = decode(hash, width, height, punch);
 
-    const imageData = ctx.createImageData(xCount, yCount);
+    const imageData = ctx.createImageData(width, height);
     imageData.data.set(pixels);
 
-    const img = await createImageBitmap(imageData, 0, 0, xCount, yCount)
+    const img = await createImageBitmap(imageData, 0, 0, width, height)
 
-    // ctx.imageSmoothingEnabled = true
-    // ctx.imageSmoothingQuality = 'high'
-    // ctx.filter = `blur(4px)`
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
-
-    // console.timeEnd('offscreen canvas')
 }

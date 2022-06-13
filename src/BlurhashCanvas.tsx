@@ -12,16 +12,14 @@ const isOffscreenSupport = typeof OffscreenCanvas !== 'undefined'
 let idGen = 0
 
 const BlurhashCanvasWorker: FC<BlurhashCanvasProps> = ({ loading, hash, width, height, punch, imageRef, ...props }) => {
-  const ref = useRef()
-  const offCanvasRef = useRef()
-  const isTransferedCanvasRef = useRef()
+  const ref = useRef<HTMLCanvasElement>()
+  const offCanvasRef = useRef<HTMLCanvasElement>()
+  const isTransferedCanvasRef = useRef<boolean>()
   const id = useMemo(() => ++idGen, [])
 
   useEffect(() => {
-    const imageComplete = imageRef?.current?.complete
+    if (imageRef?.current?.complete) return
     const canvas = ref.current;
-
-    if (imageComplete) return
     if (!canvas) return
 
     const isTransfered = isTransferedCanvasRef.current
@@ -34,12 +32,7 @@ const BlurhashCanvasWorker: FC<BlurhashCanvasProps> = ({ loading, hash, width, h
     const offCanvas = offCanvasRef.current
     const msg = { width, height, xCount: width, yCount: height, punch, hash, id }
 
-    if (isTransfered) {
-      worker.postMessage(msg)
-    } else {
-      worker.postMessage({ ...msg, canvas: offCanvas }, [offCanvas])
-    }
-    // @ts-ignore
+    worker.postMessage(isTransfered ? msg : { ...msg, canvas: offCanvas }, isTransfered ? [] : [offCanvas])
     isTransferedCanvasRef.current = true
 
   }, [hash, width, height, punch])
@@ -51,19 +44,17 @@ const BlurhashCanvasFallback: FC<BlurhashCanvasProps> = ({ loading, hash, width,
   const ref = useRef()
 
   useEffect(() => {
-    const imageComplete = imageRef?.current?.complete
-    if (imageComplete) return ;
+    if (imageRef?.current?.complete) return
 
     const draw = () => {
       const canvas: HTMLCanvasElement = ref.current;
+      if (!canvas) return
 
-      if (canvas) {
-        const pixels = decode(hash, width, height, punch);
-        const ctx = canvas.getContext('2d');
-        const imageData = ctx.createImageData(width, height);
-        imageData.data.set(pixels);
-        ctx.putImageData(imageData, 0, 0);
-      }
+      const pixels = decode(hash, width, height, punch);
+      const ctx = canvas.getContext('2d');
+      const imageData = ctx.createImageData(width, height);
+      imageData.data.set(pixels);
+      ctx.putImageData(imageData, 0, 0);
     }
 
     if (loading === 'lazy') {

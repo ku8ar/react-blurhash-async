@@ -1,6 +1,6 @@
-// @ts-ignore
 import React, { FC, useEffect, useRef, useMemo } from 'react';
-import { decode } from 'blurhash';
+// @ts-ignore typescriptowców powinno sie jebac
+import { decodeBlurHash } from 'fast-blurhash';
 import worker from './worker'
 
 export type Props = React.CanvasHTMLAttributes<HTMLCanvasElement> & {
@@ -65,7 +65,7 @@ const BlurhashCanvasFallback: FC<Props> = ({ loading, hash, width = 128, height 
       if (canvas) {
         // console.time('draw canvas')
 
-        const pixels = decode(hash, width, height, punch);
+        const pixels = decodeBlurHash(hash, width, height, punch);
         const ctx = canvas.getContext('2d');
         const imageData = ctx.createImageData(width, height);
         imageData.data.set(pixels);

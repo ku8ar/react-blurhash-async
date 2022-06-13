@@ -1,6 +1,6 @@
 {
   "name": "react-blurhash-async",
-  "version": "0.0.8",
+  "version": "0.0.11",
   "description": "Blurhash Web Worker implementation for React",
   "keywords": [
     "blurhash",
@@ -54,5 +54,8 @@
     "webpack": "5.37.0",
     "webpack-cli": "4.9.0",
     "webpack-dev-server": "3.11.2"
+  },
+  "dependencies": {
+    "fast-blurhash": "^1.0.1"
   }
 }

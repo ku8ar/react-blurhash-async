@@ -30,7 +30,8 @@ const BlurhashCanvasWorker: FC<BlurhashCanvasProps> = ({ loading, hash, width, h
     }
 
     const offCanvas = offCanvasRef.current
-    const msg = { width, height, xCount: width, yCount: height, punch, hash, id }
+
+    const msg = { width, height, punch, hash, id }
 
     worker.postMessage(isTransfered ? msg : { ...msg, canvas: offCanvas }, isTransfered ? [] : [offCanvas])
     isTransferedCanvasRef.current = true

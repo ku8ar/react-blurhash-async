@@ -1,6 +1,6 @@
 {
   "name": "react-blurhash-async",
-  "version": "0.0.11",
+  "version": "0.0.16",
   "description": "Blurhash Web Worker implementation for React",
   "keywords": [
     "blurhash",
@@ -18,8 +18,8 @@
     "url": "https://github.com/ku8ar/react-blurhash"
   },
   "homepage": "https://blurha.sh",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "lib/index.node.js",
+  "types": "es/index.d.ts",
   "module": "es/index.js",
   "scripts": {
     "prepublishOnly": "npm run build",

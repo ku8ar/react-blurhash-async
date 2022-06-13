@@ -1,23 +1,16 @@
 import React, { FC, useEffect, useRef, useMemo } from 'react';
-// @ts-ignore typescriptowców powinno sie jebac
+// @ts-ignore [typescriptowców powinno sie jebac]
 import { decodeBlurHash } from 'fast-blurhash';
+import type { BlurhashCanvasProps } from './types'
+import { blurhashCanvasDefaultProps } from './props'
 import worker from './worker'
 
-export type Props = React.CanvasHTMLAttributes<HTMLCanvasElement> & {
-  hash: string;
-  height?: number;
-  punch?: number;
-  width?: number;
-  loading?: 'eager' | 'lazy'
-  imageRef?: React.MutableRefObject<HTMLImageElement>;
-};
-
-// @ts-ignore
+// @ts-ignore [sto lat za cywilizowanym swiatem]
 const isOffscreenSupport = typeof OffscreenCanvas !== 'undefined'
 
 let idGen = 0
 
-const BlurhashCanvasWorker: FC<Props> = ({ loading = 'lazy', hash, width = 128, height = 128, punch, imageRef, ...props }) => {
+const BlurhashCanvasWorker: FC<BlurhashCanvasProps> = ({ loading, hash, width, height, punch, imageRef, ...props }) => {
   const ref = useRef()
   const offCanvasRef = useRef()
   const isTransferedCanvasRef = useRef()
@@ -25,13 +18,15 @@ const BlurhashCanvasWorker: FC<Props> = ({ loading = 'lazy', hash, width = 128, 
 
   useEffect(() => {
     const imageComplete = imageRef?.current?.complete
-    if (imageComplete) return ;
+    if (imageComplete) return
 
     const canvas = ref.current;
     const isTransfered = isTransferedCanvasRef.current
 
+    if (!canvas) return
+
     if (!isTransfered) {
-      // @ts-ignore
+      // @ts-ignore [HTMLCanvasElement 2077]
       offCanvasRef.current = canvas.transferControlToOffscreen()
     }
 
@@ -52,7 +47,7 @@ const BlurhashCanvasWorker: FC<Props> = ({ loading = 'lazy', hash, width = 128, 
   return <canvas {...props} height={height} width={width} ref={ref} />
 }
 
-const BlurhashCanvasFallback: FC<Props> = ({ loading, hash, width = 128, height = 128, punch, imageRef, ...props }) => {
+const BlurhashCanvasFallback: FC<BlurhashCanvasProps> = ({ loading, hash, width, height, punch, imageRef, ...props }) => {
   const ref = useRef()
 
   useEffect(() => {
@@ -88,11 +83,13 @@ const BlurhashCanvasFallback: FC<Props> = ({ loading, hash, width = 128, height 
   return <canvas {...props} height={height} width={width} ref={ref} />
 }
 
-const BlurhashCanvas: FC<Props> = ({ loading = 'lazy', ...props }) => {
+const BlurhashCanvas: FC<BlurhashCanvasProps> = ({ loading, ...props }) => {
   const canUseWorker = isOffscreenSupport && !!worker && loading === 'lazy'
   const Component = canUseWorker ? BlurhashCanvasWorker : BlurhashCanvasFallback
 
   return <Component loading={loading} {...props} />
 }
+
+BlurhashCanvas.defaultProps = blurhashCanvasDefaultProps
 
 export default BlurhashCanvas

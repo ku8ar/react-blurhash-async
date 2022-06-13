@@ -1,4 +1,4 @@
-// fake modules to render empty <canvas /> on SSR side without useless JS, import.meta, webworker, ES modules (fast-blurhash)
+// fake modules to render empty <canvas /> on SSR side without useless JS, import.meta, webworker, ES modules
 import React, { FC } from 'react';
 import type { BlurhashProps, BlurhashCanvasProps } from './types'
 import { absoluteStyle, defaultStyle } from './style'

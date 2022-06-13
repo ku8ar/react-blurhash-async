@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useRef, useMemo } from 'react';
-// @ts-ignore [typescriptowców powinno sie jebac]
-import { decodeBlurHash } from 'fast-blurhash';
+// Use blurhash instead of fast-blurhash, because it's an import for version without webworker (Safari).
+// And on Safari fast-blurhash is slower than blurash.
+import { decode } from 'blurhash';
 import type { BlurhashCanvasProps } from './types'
 import { blurhashCanvasDefaultProps } from './props'
 import worker from './worker'
@@ -18,12 +19,12 @@ const BlurhashCanvasWorker: FC<BlurhashCanvasProps> = ({ loading, hash, width, h
 
   useEffect(() => {
     const imageComplete = imageRef?.current?.complete
-    if (imageComplete) return
-
     const canvas = ref.current;
-    const isTransfered = isTransferedCanvasRef.current
 
+    if (imageComplete) return
     if (!canvas) return
+
+    const isTransfered = isTransferedCanvasRef.current
 
     if (!isTransfered) {
       // @ts-ignore [HTMLCanvasElement 2077]
@@ -31,7 +32,6 @@ const BlurhashCanvasWorker: FC<BlurhashCanvasProps> = ({ loading, hash, width, h
     }
 
     const offCanvas = offCanvasRef.current
-
     const msg = { width, height, xCount: width, yCount: height, punch, hash, id }
 
     if (isTransfered) {
@@ -58,15 +58,11 @@ const BlurhashCanvasFallback: FC<BlurhashCanvasProps> = ({ loading, hash, width,
       const canvas: HTMLCanvasElement = ref.current;
 
       if (canvas) {
-        // console.time('draw canvas')
-
-        const pixels = decodeBlurHash(hash, width, height, punch);
+        const pixels = decode(hash, width, height, punch);
         const ctx = canvas.getContext('2d');
         const imageData = ctx.createImageData(width, height);
         imageData.data.set(pixels);
         ctx.putImageData(imageData, 0, 0);
-
-        // console.timeEnd('draw canvas')
       }
     }
 

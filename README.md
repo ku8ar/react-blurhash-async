@@ -13,7 +13,9 @@
 
 ## Motivation
 
-This library was created to optimise the blurhash generation process in React projects. It is mainly intended for projects where blurHash is just placeholder for images. By using react-blurhash-async, the cost of generating an SPA page with many such placeholders is close to zero.
+This library was created to optimise the blurhash generation process in React projects. It is mainly intended for projects where blurHash is just placeholder for images. By using react-blurhash-async, the cost of generating an SPA page with HUNDRED such placeholders is insignificant.
+
+The library was written on 12 June 2022 A.D, inspired by Robert Kubica's drive in the Le Mans race.
 
 ## How It Works
 
@@ -25,7 +27,7 @@ This allows us to generate a page with even a hundred blurhashes, *without signi
 In addition, because blurhash is a placeholder for image, a new property `imageRef` has been added that can conditionally **force the component to stop generating blurhash when an image is already loaded**.
 Using this property is more efficient than writing a conditional component that does the same thing (unmounting <canvas /> from the DOM tree is moderately efficient when rendering several hundred components).
 
-## Suggested example of use
+#### Suggested example of use with imageRef optimization
 
 ```js
 const ImageWithBlurhash = ({ src, hash, loading }) => {
@@ -106,6 +108,12 @@ import { BlurhashCanvas } from "react-blurhash-async"
 
 ## Browser support
 
-Blurhash depends on `Uint8ClampedArray`, which is supported on all mainstream browsers and >=IE11.
-Full async rendering support is here: https://caniuse.com/offscreencanvas
+- Blurhash depends on `Uint8ClampedArray`, which is supported on all mainstream browsers and >=IE11.
+- **Optional** OffScreenCanvas : https://caniuse.com/offscreencanvas
+- **Optional** Web Worker: https://caniuse.com/webworkers
 
+## Credits (real authors of this library)
+- [Wolt BlurHash (beautiful algorithm)](https://blurha.sh/)
+- [Paul Senon (idea of using OffScreenCanvas and Web Worker to generate blurHash)](https://stackblitz.com/edit/poc-blurhash-webworker?file=README.md)
+- [@mad-gooze (author of fast-blurhash)](https://github.com/mad-gooze/fast-blurhash)
+- [@piotr-oles (only person on GH who was able to explain how to use webpack with Webworker on CDN)](https://github.com/webpack/webpack/discussions/14648#discussioncomment-1589272)

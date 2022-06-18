@@ -20,7 +20,7 @@ This library was created to optimise the blurhash generation process in React pr
 Page generation time is crucial. When the `react-blurhash-async` component is with the `loading=lazy` flag, the generation of the **CPU-expensive blurhash** is done in the `WebWorker` (when the browser has `OffScreen Canvas` support), or delayed by one tick (when the browser does not have OffScreen Canvas support) so as not to delay the rendering of the new page in SPA.
 This allows us to generate a page with even a hundred blurhashes, *without significant performance degradation*.
 
-![Alt text](./howItWorks.png?raw=true "Example")
+![Alt text](./work.png?raw=true "Example")
 
 In addition, because blurhash is a placeholder for image, a new property `imageRef` has been added that can conditionally **force the component to stop generating blurhash when an image is already loaded**.
 Using this property is more efficient than writing a conditional component that does the same thing (unmounting <canvas /> from the DOM tree is moderately efficient when rendering several hundred components).

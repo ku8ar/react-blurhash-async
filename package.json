@@ -1,6 +1,6 @@
 {
   "name": "react-blurhash-async",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "description": "Blurhash Web Worker implementation for React",
   "keywords": [
     "blurhash",

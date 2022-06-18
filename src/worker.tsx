@@ -16,7 +16,7 @@ class CorsWorker {
   }
 
   getWorker() {
-      // @ts-ignore
+    // @ts-ignore
     return this.worker
   }
 }
@@ -24,10 +24,14 @@ class CorsWorker {
 let worker = null
 
 if (typeof window !== 'undefined') {
-    // @ts-ignore [jebane gowno ts jest na poziomie cyfryzacji p0lski]
-    const corsWorker = new CorsWorker(new URL('./BlurhashWorker.worker', import.meta.url))
+    try {
+      // @ts-ignore [jebane gowno ts jest na poziomie cyfryzacji p0lski]
+      const corsWorker = new CorsWorker(new URL('./BlurhashWorker.worker', import.meta.url))
 
-    worker = corsWorker.getWorker()
+      worker = corsWorker.getWorker()
+    } catch {
+      // web worker not supported
+    }
   }
 
 export default worker

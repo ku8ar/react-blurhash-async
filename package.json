@@ -15,9 +15,9 @@
   "author": "ku8ar",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ku8ar/react-blurhash"
+    "url": "https://github.com/ku8ar/react-blurhash-async"
   },
-  "homepage": "https://blurha.sh",
+  "homepage": "https://ku8ar.github.io/react-blurhash-async/",
   "main": "lib/index.node.js",
   "types": "es/index.d.ts",
   "module": "es/index.js",

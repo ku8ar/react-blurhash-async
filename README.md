@@ -1,20 +1,48 @@
 # react-blurhash-async
 
-[![NPM Version](https://img.shields.io/npm/v/react-blurhash.svg?style=flat)](https://www.npmjs.com/package/react-blurhash-async)
+[![NPM Version](https://img.shields.io/npm/v/react-blurhash-async.svg?style=flat)](https://www.npmjs.com/package/react-blurhash-async)
 [![NPM Downloads](https://img.shields.io/npm/dm/react-blurhash-async.svg?style=flat)](https://npmcharts.com/compare/react-blurhash-async?minimal=true)
 
-> React components for using the [blurhash algorithm](https://blurha.sh) in your React projects
->
-> Fork of react-blurhash library with added lazy loading (not blocking JS thread)
+### 🔥🔥 BLAZING FAST 🔥🔥 React components for using the [blurhash algorithm](https://blurha.sh) in your React projects.
 
-This library has two additional props: `loading` and `imageRef`.
+
+> Fork of react-blurhash library running in WebWorker (not blocking JS thread).
+> Check additional props: `loading` and `imageRef`.
 
 [Demo](https://ku8ar.github.io/react-blurhash-async/)
+
+## Motivation
+
+This library was created to optimise the blurhash generation process in React projects. It is mainly intended for projects where blurHash is just placeholder for images. By using react-blurhash-async, the cost of generating an SPA page with many such placeholders is close to zero.
+
+## How It Works
+
+Page generation time is crucial. When the `react-blurhash-async` component is with the `loading=lazy` flag, the generation of the **CPU-expensive blurhash** is done in the `WebWorker` (when the browser has `OffScreen Canvas` support), or delayed by one tick (when the browser does not have OffScreen Canvas support) so as not to delay the rendering of the new page in SPA.
+This allows us to generate a page with even a hundred blurhashes, *without significant performance degradation*.
+
+![Alt text](./example.png?raw=true "Example")
+
+In addition, because blurhash is a placeholder for image, a new property `imageRef` has been added that can conditionally **force the component to stop generating blurhash when an image is already loaded**.
+Using this property is more efficient than writing a conditional component that does the same thing (unmounting <canvas /> from the DOM tree is moderately efficient when rendering several hundred components).
+
+## Suggested example of use
+
+```js
+const ImageWithBlurhash = ({ src, hash, loading }) => {
+    const ref = useRef()
+    return (
+      <div style={relativeStyle}>
+        <BlurHash imageRef={ref} hash={hash} loading={loading} style={absoluteStyleToFitParent} />
+        <img ref={ref} src={src} loading={loading} style={absoluteStyleToFitParent} />
+      </div> 
+    )
+}
+```
 
 ## Install
 
 ```sh
-npm install --save blurhash react-blurhash-async
+yarn add blurhash react-blurhash-async
 ```
 
 ## Usage
@@ -22,7 +50,7 @@ npm install --save blurhash react-blurhash-async
 ### `<Blurhash />`
 
 ```js
-import { Blurhash } from "react-blurhash-async";
+import { Blurhash } from "react-blurhash-async"
 ```
 
 ### Description
@@ -40,26 +68,19 @@ It uses `BlurhashCanvas` and a wrapping `div` to scale the decoded image to your
 | `resolutionX` (int)      | The X-axis resolution in which the decoded image will be rendered at. Recommended min. 32px. Large sizes (>128px) will greatly decrease rendering performance. (Default: 32) |
 | `resolutionY` (int)      | The Y-axis resolution in which the decoded image will be rendered at. Recommended min. 32px. Large sizes (>128px) will greatly decrease rendering performance. (Default: 32) |
 | `punch` (int)            | Controls the "punch" value (~contrast) of the blurhash decoding algorithm. (Default: 1)                                                                                      |
-| `loading` ('eager' \| 'lazy')            | Controls how blurhash is rendered. "Eager" -> blocks the thread, and component will be rendered together with blurhash. "lazy" -> loads blurhash after render cycle. When browser supports Canvas OffScreen, blurhash is generated inside webworker. (Default: "lazy")                                                                                      |
+| `loading` ('eager' \| 'lazy')            | Controls how blurhash is rendered. "eager" -> blocks the thread, and component will be rendered together with blurhash. "lazy" -> loads blurhash after render cycle. When browser supports Canvas OffScreen, blurhash is generated inside webworker. (Default: "lazy")                                                                                      |
 | `imageRef` (MutableRefObject<HTMLImageElement)            | Additional optimisation parameter. Most blurHashes are placeholders generated for images. Giving to component a reference to `<img />` allows it to optionally not generate blurhash when image is visible (cached in browser memory).. (Default: undefined)                                                                                      |
 
 #### Example
 
 ```jsx
-<Blurhash
-  hash="LEHV6nWB2yk8pyo0adR*.7kCMdnj"
-  width={400}
-  height={300}
-  resolutionX={32}
-  resolutionY={32}
-  punch={1}
-/>
+<Blurhash hash="LEHV6nWB2yk8pyo0adR*.7kCMdnj" width={400} height={300} resolutionX={32} resolutionY={32} punch={1} />
 ```
 
 ### `<BlurhashCanvas />`
 
 ```js
-import { BlurhashCanvas } from "react-blurhash";
+import { BlurhashCanvas } from "react-blurhash-async"
 ```
 
 ### Description
@@ -74,7 +95,7 @@ import { BlurhashCanvas } from "react-blurhash";
 | `width` (int)   | Width of the decoded image.                                                             |
 | `height` (int)  | Height of the decoded image.                                                            |
 | `punch` (int)   | Controls the "punch" value (~contrast) of the blurhash decoding algorithm. (Default: 1) |
-| `loading` ('eager' \| 'lazy')            | Controls how blurhash is rendered. "Eager" -> blocks the thread, and component will be rendered together with blurhash. "lazy" -> loads blurhash after render cycle. When browser supports Canvas OffScreen, blurhash is generated inside webworker. (Default: "lazy")                                                                                      |
+| `loading` ('eager' \| 'lazy')            | Controls how blurhash is rendered. "eager" -> blocks the thread, and component will be rendered together with blurhash. "lazy" -> loads blurhash after render cycle. When browser supports Canvas OffScreen, blurhash is generated inside webworker. (Default: "lazy")                                                                                      |
 | `imageRef` (MutableRefObject<HTMLImageElement)            | Additional optimisation parameter. Most blurHashes are placeholders generated for images. Giving to component a reference to `<img />` allows it to optionally not generate blurhash when image is visible (cached in browser memory).. (Default: undefined)                                                                                      |
 
 #### Example

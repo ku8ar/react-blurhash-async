@@ -20,7 +20,7 @@ The library was written on 12 June 2022 A.D, inspired by Robert Kubica's drive i
 ## How It Works
 
 Page generation time is crucial. When the `react-blurhash-async` component is with the `loading=lazy` flag, the generation of the **CPU-expensive blurhash** is done in the `WebWorker` (when the browser has `OffScreen Canvas` support), or delayed by one tick (when the browser does not have OffScreen Canvas support) so as not to delay the rendering of the new page in SPA.
-This allows us to generate a page with even a hundred blurhashes, *without significant performance degradation*.
+This allows to generate a page with even a hundred blurhashes, *without significant performance degradation*.
 
 ![Alt text](./work.png?raw=true "Example")
 
